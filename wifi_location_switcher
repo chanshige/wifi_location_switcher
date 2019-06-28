@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+##############################
+# Wi-Fi network location switcher
+# @author: chanshige <dev@shigeki.tokyo>
+##############################
+
+readonly current_airport=$(/usr/sbin/networksetup -getairportnetwork en0 | awk '{print $4}')
+readonly current_location=$(/usr/sbin/networksetup -getcurrentlocation)
+# default location
+readonly def_location_name="Automatic"
+
+exists_network_location() {
+  /usr/sbin/networksetup -listlocations | grep '\<'${1}'\>' >/dev/null 2>&1 && return 0 || return 1
+}
+
+change_network_location() {
+  /usr/sbin/scselect ${1} >/dev/null 2>&1 && return 0 || return 1
+}
+
+notification() {
+  title="Wi-Fi network location switcher"
+  /usr/bin/osascript -e "display notification \"${1}\" with title \"${title}\" subtitle \"${2}\""
+}
+
+# WiFi(AirPort)名と同じlocationが存在する場合
+if exists_network_location ${current_airport}; then
+  [[ ${current_location} != ${current_airport} ]] && change_network_location ${current_airport} || exit
+else
+  [[ ${current_location} != ${def_location_name} ]] && change_network_location ${def_location_name} || exit
+fi
+
+# display
+notification "ネットワーク環境を $(/usr/sbin/networksetup -getcurrentlocation) に変更しました" "SSID: ${current_airport}"
+exit
