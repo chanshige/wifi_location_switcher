@@ -6,6 +6,9 @@ WiFiのSSID名に合わせて、ネットワーク環境(location)も一緒に�
 ※ デフォルトで用意されている「自動」(Automatic) 名称は残しておいてください  
 ※ WiFiを切った場合、動作しないようにしています。
 
+動作確認  
+    macOS 10.14 Mojave, 10.15 Catalina
+
 ### example
     SSID: example-wifi
     ネットワーク環境名: example-wifi
