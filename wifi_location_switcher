@@ -1,20 +1,22 @@
-#!/usr/bin/env bash
+#!/bin/sh
 ##############################
 # Wi-Fi network location switcher
 # @author: chanshige <dev@shigeki.tokyo>
 ##############################
 
-readonly current_airport=$(/usr/sbin/networksetup -getairportnetwork en0 | awk '{print $4}')
-readonly current_location=$(/usr/sbin/networksetup -getcurrentlocation)
-# default location
-readonly def_location_name="Automatic"
+# AirPort(Wifi)
+readonly AIRPORT_STATUS=$(/usr/sbin/networksetup -getairportpower en0 | awk '{print $4}')
+readonly CURRENT_AIRPORT_NAME=$(/usr/sbin/networksetup -getairportnetwork en0 | awk '{print $4}')
+# Network Location (configure)
+readonly CURRENT_LOCATION_NAME=$(/usr/sbin/networksetup -getcurrentlocation)
+readonly DEFAULT_LOCATION_NAME="Automatic"
 
 exists_network_location() {
-  /usr/sbin/networksetup -listlocations | grep '\<'${1}'\>' >/dev/null 2>&1 && return 0 || return 1
+  /usr/sbin/networksetup -listlocations | grep -w "${1}" >/dev/null 2>&1 && return 0 || return 1
 }
 
 change_network_location() {
-  /usr/sbin/scselect ${1} >/dev/null 2>&1 && return 0 || return 1
+  /usr/sbin/scselect "${1}" >/dev/null 2>&1 && return 0 || return 1
 }
 
 notification() {
@@ -22,13 +24,18 @@ notification() {
   /usr/bin/osascript -e "display notification \"${1}\" with title \"${title}\" subtitle \"${2}\""
 }
 
+# WiFi(AirPort) is Off
+if [ "${AIRPORT_STATUS}" = "Off" ]; then
+  exit 0
+fi
+
 # WiFi(AirPort)名と同じlocationが存在する場合
-if exists_network_location ${current_airport}; then
-  [[ ${current_location} != ${current_airport} ]] && change_network_location ${current_airport} || exit
+if exists_network_location "${CURRENT_AIRPORT_NAME}"; then
+  [ "${CURRENT_LOCATION_NAME}" != "${CURRENT_AIRPORT_NAME}" ] && change_network_location "${CURRENT_AIRPORT_NAME}" || exit 0
 else
-  [[ ${current_location} != ${def_location_name} ]] && change_network_location ${def_location_name} || exit
+  [ "${CURRENT_LOCATION_NAME}" != ${DEFAULT_LOCATION_NAME} ] && change_network_location ${DEFAULT_LOCATION_NAME} || exit 0
 fi
 
 # display
-notification "ネットワーク環境を $(/usr/sbin/networksetup -getcurrentlocation) に変更しました" "SSID: ${current_airport}"
+notification "ネットワーク環境を $(/usr/sbin/networksetup -getcurrentlocation) に変更しました" "SSID: ${CURRENT_AIRPORT_NAME}"
 exit

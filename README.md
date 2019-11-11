@@ -1,9 +1,10 @@
 # wifi_location_switcher
 
-Wi-FiのSSID名に合わせて、ネットワーク環境(location)も一緒に変更するシェル  
+WiFiのSSID名に合わせて、ネットワーク環境(location)も一緒に変更するシェルです。 
 
-※ Wi-FiのSSID名と同じ名前で「ネットワーク環境」を作成してください  
+※ WiFiのSSID名と同じ名前で「ネットワーク環境」を作成してください  
 ※ デフォルトで用意されている「自動」(Automatic) 名称は残しておいてください  
+※ WiFiを切った場合、動作しないようにしています。
 
 ### example
     SSID: example-wifi
