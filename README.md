@@ -22,11 +22,11 @@ WiFiのSSID名に合わせて、ネットワーク環境(location)も一緒に�
     % cd wifi_location_switcher
     
     ### 各ファイルを所定の位置にコピー
-    % sudo cp wifi_location_switcher /usr/local/etc/
+    % sudo cp wifi_location_switcher /usr/local/bin/
     % sudo cp chanshige.wifi.location.switcher.plist ~/Library/LaunchAgents/
 
     ### 実行権限
-    % sudo chmod a+x /usr/local/etc/wifi_location_switcher
+    % sudo chmod a+x /usr/local/bin/wifi_location_switcher
     
     ### launchctl に登録
     % cd ~/Library/LaunchAgents
@@ -47,4 +47,4 @@ WiFiのSSID名に合わせて、ネットワーク環境(location)も一緒に�
     % sudo launchctl list |grep chanshige.wifi.location.switcher
     
     ### シェル本体を削除
-    % sudo rm -r /usr/local/etc/wifi_location_switcher
+    % sudo rm -r /usr/local/bin/wifi_location_switcher
